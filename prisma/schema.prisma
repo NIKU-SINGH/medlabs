@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  // shadowDatabaseUrl   = env("SHADOW_DATABASE_URL")
+  // url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  userId         Int              @id @default(autoincrement())
+  name           String
+  email          String
+  username       String?          @unique
+  password       String
+  usertestbooked UserTestBooked[]
+  updatedAt      DateTime         @updatedAt
+  createdAt      DateTime         @default(now())
+}
+
+model Lab {
+  labName       String
+  labId         Int      @id @default(autoincrement())
+  password      String
+  email         String
+  labImage      String?
+  phone         String?
+  certificateNo String?
+  location      String?
+  tests         Test[]
+  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())
+}
+
+model UserTestBooked {
+  userId     Int              @id @default(autoincrement())
+  testId     Int
+  labId      Int
+  bookedAt   String
+  bookedFor  String
+  patients   PatientDetails[]
+  updatedAt  DateTime         @updatedAt
+  createdAt  DateTime         @default(now())
+  User       User?            @relation(fields: [userUserId], references: [userId])
+  userUserId Int?
+}
+
+model Test {
+  testName                String
+  testId                  Int             @id @default(autoincrement())
+  labTestId               Int?
+  testPrice               Int
+  testDescription         String
+  testImage               String?
+  homeCollection          Boolean
+  lab                     Lab?            @relation(fields: [labTestId], references: [labId])
+  userTestBookedUserId    Int?
+  createdAt               DateTime        @default(now())
+  updatedAt               DateTime        @updatedAt
+  PatientDetails          PatientDetails? @relation(fields: [patientDetailsPateintId], references: [pateintId])
+  patientDetailsPateintId Int?
+}
+
+model PatientDetails {
+  pateintId            Int             @id @default(autoincrement())
+  name                 String
+  email                String
+  phone                String
+  address              String
+  age                  Int
+  gender               String
+  bloodGroup           String
+  Height               Int
+  weight               Int
+  tests                Test[]
+  UserTestBooked       UserTestBooked? @relation(fields: [userTestBookedUserId], references: [userId])
+  userTestBookedUserId Int?
+}

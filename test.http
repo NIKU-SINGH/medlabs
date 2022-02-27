@@ -1,0 +1,8 @@
+POST http://localhost:3000/signuplabs
+Content-Type: application/json
+
+{
+  "labName": "Jai Mata Di",
+  "email": "cheems69@go.dev",
+  "password":"12345678",
+}
